@@ -1,20 +1,60 @@
 from tkinter import *
 import clientnet
 win = Tk()
+acc = None #account if logged in
+conn = None #network connection to server
+messages = list()
+MAX_MESSAGES = 20
+groot = None
 
-conn = None
-#####
-#Connection screen
-#####
+########
+#Helper
+########
 
+def interpret_input(s):
+    if "RESULT LOGIN" == s[:12]:
+        if "1" in s:
+            global acc
+            acc = True
+    elif "RECV" == s[:4]:
+        messages.append(s[5:])
+        if len(messages)>MAX_MESSAGES:
+            messages.pop(0)
+    else:
+        print("cannot inperpret:",s)
+
+
+
+        
 
 def wipe_frame(frame):
     for item in frame.winfo_children():
       item.destroy()
+########
+#ROUTES
+########
+
+
+
+
+########
+#Connection screen
+########
+
+
+
+            
     
 
-def login(root):
+
+def logout():
     
+    global acc
+    acc = None
+    conn.logout()
+    home(groot)
+
+def login(root):
     instr = Label(root, text="login to account")
     instr.grid(row=0,column=0)
     usr = Entry(root)
@@ -23,22 +63,67 @@ def login(root):
     psw = Entry(root)
     psw.insert(0,"Enter password")
     psw.grid(row=2,column=0)
-    confirmB = Button(root,text="Confirm")
-    confirmB.grid(row=3,column=0)
-    cancelB = Button(root,text="Cancel")
-    cancelB.grid(row=4,column=0)
+
+    def attempt_login():
+        username = usr.get()
+        password = psw.get()
+        conn.login(usr,psw)
+        go_to_home()
     
+    confirmB = Button(root,text="Confirm",command=attempt_login)
+    confirmB.grid(row=3,column=0)
+    cancelB = Button(root,text="Cancel",command=go_to_home)
+    cancelB.grid(row=4,column=0)
+
+def go_to_home():
+    wipe_frame(groot)
+    home(groot)
+
+
+def content(root):
+    if len(messages) == 0:
+        m = Label(root, text="(NO MESSAGES)")
+        m.grid(row=1,column=3)
+        return
+    for i in range(20):
+        message = ' '
+        if len(messages)>i:
+            message = messages[i]
+        m = Label(root, text=message)
+        m.grid(row=1+i,column=3)
+        
+        
+def message_send_screen(root):
+    if acc:
+        channelE = Entry(root)
+        channelE.insert(0,"Chan Name")
+        channelE.grid(row=21,column=2)
+        messageE = Entry(root)
+        messageE.insert(0,"Insert message here")
+        messageE.grid(row=21,column=3)
+        confirm = Button(root,text="Send")
+        confirm.grid(row=22,column=2)
+    
+
 
 def home(root):
     def go_to_login():
         wipe_frame(root)
         login(root)
-    
 
     homelabel = Label(root, text = "Home Screen")
     homelabel.grid(row=0,column=0)
-    loginB = Button(root,text="Login",command=go_to_login)
-    loginB.grid(row=2,column=0)
+    if acc == None:
+        loginB = Button(root,text="Login",command=go_to_login)
+        loginB.grid(row=2,column=0)
+    else:
+        loginB = Button(root,text="Logout",command=logout)
+        loginB.grid(row=2,column=0)
+
+    content(root)
+    message_send_screen(root)
+    
+
     
 
 
@@ -65,14 +150,12 @@ def connection_screen():
             l = Label(root, text="Invalid attempt")
             l.grid(row=8)
         else:
+            global groot
+            groot = root
             wipe_frame(root)
             home(root)
             
             
-            
-        
-        
-    
     confirm = Button(root,text="Confirm", command=confirmation_protocol)
 
     instr.grid(row=0,column=0)
@@ -87,7 +170,15 @@ if __name__ =='__main__':
     connection_screen()
     
     print("26")
-    win.mainloop()
-    print("25")
+    while True: 
+        win.update()
+        
+        if conn != None:
+            conn.update()
+            if conn.has_changed():
+                print("change detected in connection, updating")
+                for i in conn.get_messages():
+                    interpret_input(i)
+                home(groot)
 
 

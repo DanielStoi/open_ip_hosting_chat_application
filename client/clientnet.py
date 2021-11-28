@@ -3,10 +3,15 @@ import os
 import socket
 import select
 
+#note: currently alot of placeholder functions
+#this section will be done after the main application is complete
+
+
 class ClientConnection():
     def __init__(self):
         self.messages = list()
         self.out_queue = list()
+        self.changed = False
 
     def connect(self,host,port):
         try:
@@ -29,7 +34,8 @@ class ClientConnection():
         self.s = s
         return True
 
-    def iter(self):
+    def update(self):
+        return True
         read_ready, write_ready, exceptions = select.select(inputs, outputs, inputs,0.01)
 
         for s in read_ready:
@@ -62,10 +68,33 @@ class ClientConnection():
         self.out_queue.append(message)
     
     def get_messages(self):
-        ans = self.messsages
+        self.messages.append("RECV joe test this is a pratice message")
+        ans = self.messages
         self.messages = list()
         return ans
-    
+
+    def has_changed(self):
+        if self.changed:
+            self.changed = False
+            return True
+        return False
+
+    def login(self,usrname,password):
+        self.out_queue.append("LOGIN "+str(usrname)+" "+str(password))
+        
+        #TEMP
+        self.messages.append("RESULT LOGIN 1")
+        self.changed = True
+        
+    def logout(self):
+        self.out_queue.append("LOGOUT")
+
+
+        #TEMP
+        self.messages.append("RESULT LOGOUT 1")
+        self.changed = True
+        
+        
 
         
         
