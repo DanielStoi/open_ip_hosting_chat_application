@@ -1,6 +1,6 @@
 # open_ip_hosting_chat_application (incomplete, In progress)
 an application that allows people to run a chat server, and also connect to other people's server to communicate on different channels.
-currently not yet functional
+currently, the networking aspect is still underdevelopment.
 
 ## setting up a server:
 servers are currently only accessable from localhost and LAN connections. A port forwarding rule needs to be set up on the router in order for the server to exist on the internet. 
