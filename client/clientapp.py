@@ -17,7 +17,17 @@ def interpret_input(s):
             global acc
             acc = True
     elif "RECV" == s[:4]:
-        messages.append(s[5:])
+        
+        message = s[5:]
+        message = message.split()
+
+        
+        if len(message)>=3:
+            message = "USER: "+message[0]+" CHANNEL:"+ message[1]+"\tSEND: " +" ".join(message[2:])
+            messages.append(message)
+        else:
+            messages.append(" ".join(message))
+
         if len(messages)>MAX_MESSAGES:
             messages.pop(0)
     else:
@@ -63,6 +73,7 @@ def login(root):
     psw = Entry(root)
     psw.insert(0,"Enter password")
     psw.grid(row=2,column=0)
+    win.title("chatApp -Login")
 
     def attempt_login():
         username = usr.get()
@@ -96,7 +107,7 @@ def content(root):
 def message_send_screen(root):
     if acc:
         channelE = Entry(root)
-        channelE.insert(0,"Chan Name")
+        channelE.insert(0,"Channel")
         channelE.grid(row=21,column=2)
         messageE = Entry(root)
         messageE.insert(0,"Insert message here")
@@ -116,13 +127,18 @@ def home(root):
     if acc == None:
         loginB = Button(root,text="Login",command=go_to_login)
         loginB.grid(row=2,column=0)
+        win.title("chatApp -home (guest)")
     else:
         loginB = Button(root,text="Logout",command=logout)
         loginB.grid(row=2,column=0)
+        channB = Button(root,text="Join a Channel",command=logout)
+        channB.grid(row=3,column=0)
+        win.title("chatApp -home (user)")
+
 
     content(root)
     message_send_screen(root)
-    
+
 
     
 
@@ -140,6 +156,7 @@ def connection_screen():
 
 
     def confirmation_protocol():
+        win.title("chatApp -establish connection")
         ip = ip_entry.get()
         port = port_entry.get()
         print("inputted ip:",ip,"port:",port)
@@ -167,6 +184,7 @@ def connection_screen():
 if __name__ =='__main__':
         
     win.geometry("700x500")
+    win.title("chatApp -establish connection")
     connection_screen()
     
     print("26")
