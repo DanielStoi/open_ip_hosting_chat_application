@@ -1,6 +1,6 @@
 # open_ip_hosting_chat_application (incomplete, In progress)
 an application that allows people to run a chat server, and also connect to other people's server to communicate on different channels.
-currently, the networking aspect is still underdevelopment.
+currently, the networking is incomplete.
 
 ![demo home](https://github.com/DanielStoi/open_ip_hosting_chat_application/blob/main/demo/user%20home.PNG)
 
