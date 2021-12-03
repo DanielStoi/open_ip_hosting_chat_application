@@ -54,7 +54,42 @@ def wipe_frame(frame):
 
 
             
+def join_create_channel():
+    wipe_frame(groot)
+    root = groot
+
+    instr = Label(root, text="create/join channel")
+    instr.grid(row=0,column=0)
+    usr = Entry(root)
     
+    usr.grid(row=1,column=0)
+    usr.insert(0,"Channel Name")
+
+
+    def send_join_signal():
+        channel_name = usr.get()
+        conn.write("JOIN "+channel_name)
+        go_to_home()
+    
+    def send_create_signal():
+        channel_name = usr.get()
+        conn.write("CREATE "+channel_name)
+        conn.write("JOIN "+channel_name)
+        go_to_home()
+
+    jB = Button(root,text="Join",command=send_join_signal)
+    jB.grid(row=2,column=0)
+
+    cB = Button(root,text="Create",command=send_create_signal)
+    cB.grid(row=2,column=1)
+
+    cancelB = Button(root,text="Cancel",command=go_to_home)
+    cancelB.grid(row=3,column=0)
+
+    win.title("chatApp -create/join channel")
+
+    
+
 
 
 def logout():
@@ -131,7 +166,7 @@ def home(root):
     else:
         loginB = Button(root,text="Logout",command=logout)
         loginB.grid(row=2,column=0)
-        channB = Button(root,text="Join a Channel",command=logout)
+        channB = Button(root,text="join/create channel",command=join_create_channel)
         channB.grid(row=3,column=0)
         win.title("chatApp -home (user)")
 
