@@ -16,12 +16,11 @@ class ClientConnection():
     def connect(self,host,port):
         try:
             port = int(port)
-            return True
         except:
             return False
 
-        this.host = host
-        this.port = port
+        self.host = host
+        self.port = port
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         ret = s.connect_ex((host,port))
         if ret!=0:
@@ -35,7 +34,6 @@ class ClientConnection():
         return True
 
     def update(self):
-        return True
         read_ready, write_ready, exceptions = select.select(inputs, outputs, inputs,0.01)
 
         for s in read_ready:
@@ -68,7 +66,7 @@ class ClientConnection():
         self.out_queue.append(message)
     
     def get_messages(self):
-        self.messages.append("RECV joe test this is a pratice message")
+        #self.messages.append("RECV joe test this is a pratice message")
         ans = self.messages
         self.messages = list()
         return ans
@@ -82,17 +80,21 @@ class ClientConnection():
     def login(self,usrname,password):
         self.out_queue.append("LOGIN "+str(usrname)+" "+str(password))
         
-        #TEMP
+        #TEMP, later portion just used for testing
+        """
         self.messages.append("RESULT LOGIN 1")
         self.changed = True
+        """
         
     def logout(self):
         self.out_queue.append("LOGOUT")
 
 
-        #TEMP
+        #TEMP, later just used for testing
+        """
         self.messages.append("RESULT LOGOUT 1")
         self.changed = True
+        """
         
         
 
