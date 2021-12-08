@@ -34,11 +34,11 @@ class ClientConnection():
         return True
 
     def update(self):
-        read_ready, write_ready, exceptions = select.select(inputs, outputs, inputs,0.01)
+        read_ready, write_ready, exceptions = select.select(self.inputs, self.outputs, self.inputs,0.01)
 
         for s in read_ready:
             # accept connection if server is read-ready
-            if s is self.s:
+            if s is self.s and False:
                 connection, client_address = s.accept()
                 connection.setblocking(False)
                 print ("server received connection: socket " + str(client_address))
@@ -52,19 +52,23 @@ class ClientConnection():
                 if message:
                     message = message.decode("utf-8") 
                     self.messages.append(message)
+                    self.changed=True
                 else:
                     s.close()
                     self.inputs.remove(s)
                     self.outputs.remove(s)
         
         for s in write_ready:
-            if self.messages:
-                message = self.out_queue.pop(0)
+            if self.out_queue:
+                message = self.out_queue.pop(0)+"\n"
                 s.send(message.encode())
 
     def write(self,message):
         self.out_queue.append(message)
-    
+
+    def send_message(self,channel, message):
+        self.out_queue.append("SAY "+str(channel)+" "+str(message))
+        
     def get_messages(self):
         #self.messages.append("RECV joe test this is a pratice message")
         ans = self.messages
@@ -84,8 +88,14 @@ class ClientConnection():
         """
         self.messages.append("RESULT LOGIN 1")
         self.changed = True
-        """
         
+        """
+
+
+    def create_user(self,usrname,password):
+        self.out_queue.append("REGISTER "+str(usrname)+" "+str(password))
+        
+    
     def logout(self):
         self.out_queue.append("LOGOUT")
 
