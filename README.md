@@ -7,7 +7,9 @@ An application that allows people to run a chat server, and also connect to othe
 ## setting up a server: 
 servers are currently only accessable from localhost and LAN connections. A port forwarding rule needs to be set up on the router in order for the server to exist on the internet. 
 
-run "server/server.py" and either specify the port and ip through the command line or though via inputs.
+run "server.py" inside the server folder and specify the port and ip through arguments while first running the program, 
+
+python server.py [ip] [port] 
 
 ## setting up a client:
 run "client/clientapp.py"
