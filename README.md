@@ -9,7 +9,9 @@ servers are currently only accessable from localhost and LAN connections. A port
 
 run "server.py" inside the server folder and specify the port and ip through arguments while first running the program, 
 
-python server.py [ip] [port] 
+python server.py [ip] [port]
+
+no arguments will assume a localhost connection on port 6025
 
 ## setting up a client:
 run "client/clientapp.py"
