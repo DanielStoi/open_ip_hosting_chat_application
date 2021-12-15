@@ -16,6 +16,6 @@ no arguments will assume a localhost connection on port 6025
 ## setting up a client:
 run "client/clientapp.py"
 
-As long as a valid ip and port is provided, the client application is able to connect to any valid server (even through the internet).
+First, the application will take you to a screen that requests an IP and port to join a server. The client application is able to connect to any valid server (even through the internet).
 
 Once a valid connection is established to a chat server, the user has the option of creating a user account (with a password and username), logging in and creating/joining channels to communicate through.
