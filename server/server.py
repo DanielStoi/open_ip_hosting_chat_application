@@ -8,6 +8,7 @@ import hashlib
 
 
 #variable for loop
+
 daemon_quit = False
 
 
@@ -19,26 +20,29 @@ def hash_alg(text):
     return str(int(hashlib.md5(text.encode('utf-8')).hexdigest(), 16))
 
 
-def process_text(text, is_verbose=False):
+
+
+
+    
+
+
+
+
+def process_text(text):
     lines = text.split('\n')
     ans = list()
     for i in lines:
         if len(i)>2:
             ans.append(i.split())
-    if is_verbose:
-        print("processed text is",ans)
     return ans
 
 
-
-# main server functionality
-
 class App():
     def __init__(self):
-        self.messages = {None : list()}   #connection->messagelist
-        self.accounts = {}                #username->socket
-        self.channels = {}                #channelname->username
-        self.user_db = list()             #(username,password)
+        self.messages = {None : list()} #socket->messagelist
+        self.accounts = {} #username->socket
+        self.channels = {} #channelname->usernames
+        self.user_db = list() #(username,password)
 
 
     def process_cmd(self,connection, cmd):
@@ -82,6 +86,7 @@ class App():
         
         
         elif cmd[0] == "SAY":
+            #say shouldn't have result return
             if len(cmd)>=3:
                 message = " ".join(cmd[2:])
                 if (self.write_to_channel(cmd[1],connection,message)):
@@ -177,6 +182,7 @@ class App():
 
 
 def run(ip='localhost',port=6025):
+    #Do not modify or remove this function call
     signal.signal(signal.SIGINT, quit_gracefully)
     print("\n\n###\nTHIS IS THE SERVER APPLICATION FOR THE CHAT APP\n###")
     ##################################################
@@ -214,7 +220,6 @@ def run(ip='localhost',port=6025):
                 app.add_user(connection)
             # receive message if a connection is read-ready
             else:
-                #print("attempting to receive message;")
                 message = s.recv(1024)
                 
                 if message:
