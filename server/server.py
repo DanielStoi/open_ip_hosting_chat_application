@@ -225,14 +225,16 @@ def run(ip='localhost',port=6025):
             # receive message if a connection is read-ready
             else:
                 #print("attempting to receive message;")
-                message = s.recv(1024)
-                
-                if message:
-                    message = message.decode("utf-8") 
-                    print("message is", message)
-                    for cmd in process_text(message):
-                        app.process_cmd(s,cmd)
-                else:
+                message = False
+                try:
+                    message = s.recv(1024)
+                    if message:
+                        
+                        message = message.decode("utf-8") 
+                        print("message is", message)
+                        for cmd in process_text(message):
+                            app.process_cmd(s,cmd)
+                except:
                     s.close()
                     inputs.remove(s)
                     outputs.remove(s)

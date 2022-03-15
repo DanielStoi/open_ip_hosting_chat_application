@@ -129,10 +129,10 @@ def view_all_channels():
         header.grid(row=1, column=3)
     else:
         header = Label(root,text="CHANNELS:")
-        header.grid(row=1, column=3)
+        header.grid(row=2, column=3)
         for i,name in enumerate(channels):
             m = Label(root, text=name)
-            m.grid(row=1+i,column=3)
+            m.grid(row=2+i,column=3)
         
         
     
