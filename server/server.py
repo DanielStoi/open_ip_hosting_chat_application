@@ -7,11 +7,10 @@ import select
 import hashlib
 
 
-#variable for loop
-
 daemon_quit = False
 
 
+#Do not modify or remove this handler
 def quit_gracefully(signum, frame):
     global daemon_quit
     daemon_quit = True
@@ -34,6 +33,7 @@ def process_text(text):
     for i in lines:
         if len(i)>2:
             ans.append(i.split())
+    #print("processed text is",ans)
     return ans
 
 
@@ -42,7 +42,7 @@ class App():
         self.messages = {None : list()} #socket->messagelist
         self.accounts = {} #username->socket
         self.channels = {} #channelname->usernames
-        self.user_db = list() #(username,password)
+        self.user_db = list()
 
 
     def process_cmd(self,connection, cmd):
@@ -58,7 +58,9 @@ class App():
             messages[connection].append("RESULT LOGIN 0\n")
 
         elif cmd[0] == "REGISTER":
+            #print("entering register")
             if len(cmd)>=3:
+                #print("register format was valid")
                 if self.register(cmd[1],cmd[2]):
                     messages[connection].append("RESULT REGISTER 1\n")
                     return
@@ -119,6 +121,7 @@ class App():
 
 
     def login(self,connection, username,password):
+        #print(self.user_db)
         if username in self.accounts and self.accounts[username] != None:
             return False
         
@@ -132,6 +135,7 @@ class App():
 
 
     def register(self,username,password):
+        #print(self.user_db)
         for user in self.user_db:
             if user[0] == username:
                 return False
@@ -220,6 +224,7 @@ def run(ip='localhost',port=6025):
                 app.add_user(connection)
             # receive message if a connection is read-ready
             else:
+                #print("attempting to receive message;")
                 message = s.recv(1024)
                 
                 if message:
@@ -263,3 +268,4 @@ if __name__ == '__main__':
             port = int(sys.argv[2])
             ip = sys.argv[1]
     run(ip,port)
+
